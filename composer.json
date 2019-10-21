@@ -1,0 +1,16 @@
+{
+    "name": "hoc/produits_natif",
+    "description": "Rappel PHP natif avant Symfony",
+    "authors": [
+        {
+            "name": "Lucas Delobelle",
+            "email": "lucas@ld-web.net"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
