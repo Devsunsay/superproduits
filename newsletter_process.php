@@ -1,6 +1,8 @@
 <?php
+require_once 'vendor/autoload.php';
 session_start();
-var_dump($_POST);
+
+use App\Utils;
 
 // TODO: insérer l'email en bdd
 echo $_POST['email'];
@@ -21,6 +23,4 @@ $_SESSION['notifications'] = [
 ];
 
 // rediriger vers la page d'accueil
-// TODO: factoriser cette méthode dans une classe utilitaire
-header('Location: index.php');
-exit;
+Utils::redirect('index.php');
