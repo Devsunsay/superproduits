@@ -1,11 +1,13 @@
 <?php
 require_once 'vendor/autoload.php';
+
+use App\IniFileLoader;
 use App\Utils;
 
 session_start();
 
 // TODO: insérer l'email en db
-$dbData = parse_ini_file('.ini', true);
+$dbData = IniFileLoader::iniFileLoad('conf.ini');
 
 $dbname = $dbData['dbname'];
 $login = $dbData['login'];
@@ -13,23 +15,17 @@ $pwd = $dbData['pwd'];
 
 $email = $_POST['email'];
 
-try
-{
-    $db = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $login, $pwd);
-    
-    $req = $db->prepare('INSERT INTO newsletter(email, subscribed) VALUES(:email, :subscribed)');
+$db = Utils::dbConnexion($dbname, $login, $pwd);
 
-    var_dump($req);
+$req = $db->prepare('INSERT INTO newsletter(email, subscribed) VALUES(:email, :subscribed)');
 
-    $req->execute(array(
-        'email' => $email,
-        'subscribed' => true
-    ));
+var_dump($req);
 
-} catch (Exception $e)
-{
-        die('Erreur : ' . $e->getMessage());
-}
+$req->execute(array(
+    'email' => $email,
+    'subscribed' => true
+));
+
 
 
 // Enregistrer un message dans la session
@@ -38,7 +34,7 @@ try
 // Donc globalement, on voudra ajouter une notification au tableau
 // Mais vérifier qu'il est défini, et s'il ne l'est pas, le créer
 
-if(empty($_SESSION['notifications'])) {
+if (empty($_SESSION['notifications'])) {
     $_SESSION['notifications'] = [
         'success' => [
             'Merci, votre email a bien été enregistré',

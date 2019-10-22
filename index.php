@@ -1,4 +1,7 @@
 <?php
+
+use App\IniFileLoader;
+
 session_start();
 require_once 'data/produits.php';
 ?>
