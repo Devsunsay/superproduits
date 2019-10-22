@@ -1,4 +1,6 @@
 <?php
+require_once '/src/Utils.php';
+
 session_start();
 
 // TODO: insérer l'email en db
