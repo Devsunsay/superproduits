@@ -1,5 +1,6 @@
 <?php
-require_once '/src/Utils.php';
+require_once 'vendor/autoload.php';
+use App\Utils;
 
 session_start();
 
@@ -16,10 +17,11 @@ try
 {
     $db = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $login, $pwd);
     
-    $req = $db->prepare('INSERT INTO newsletter(id, email, subscribed) VALUES(:id, :email, :subscribed)');
+    $req = $db->prepare('INSERT INTO newsletter(email, subscribed) VALUES(:email, :subscribed)');
+
+    var_dump($req);
 
     $req->execute(array(
-        'id' => '',
         'email' => $email,
         'subscribed' => true
     ));
@@ -40,7 +42,6 @@ if(empty($_SESSION['notifications'])) {
     $_SESSION['notifications'] = [
         'success' => [
             'Merci, votre email a bien été enregistré',
-            'T bo'
         ],
         'info' => [
             'RGPD : Votre email ne sera pas divulgué pour de la publicité'
@@ -51,5 +52,4 @@ if(empty($_SESSION['notifications'])) {
 
 // rediriger vers la page d'accueil
 // TODO: factoriser cette méthode dans une classe utilitaire
-$indexLocation = '/.index.php';
-new Utils().redirect($indexLocation);
+Utils::redirect('index.php');
