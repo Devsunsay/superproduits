@@ -2,20 +2,11 @@
 require_once 'vendor/autoload.php';
 session_start();
 
-use App\Config;
 use App\dataBaseConnexion;
 use App\Utils;
 
-try {
-    $dbConfig = new Config('config/db.ini');
-    
-    $pdo = dataBaseConnexion::getInstance($dbConfig);
-    
-} catch (Exception $ex) {
-    // TODO: générer nouvelle notification d'erreur avant de rediriger vers la page d'accueil
-    console.log($ex);
-    Utils::redirect('index.php');
-}
+
+$pdo = dataBaseConnexion::getInstance($dbConfig);
 
 if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     // TODO: générer une notification d'erreur sur le format de l'adresse email

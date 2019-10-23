@@ -2,8 +2,6 @@
 
 namespace App;
 
-use PDO;
-
 /**
  * Singleton
  */
@@ -15,7 +13,7 @@ class dataBaseConnexion
      * @access private
      * @static
      */
-    private static $_instance = null;
+    private static $instance = null;
 
     /**
      * Constructeur de la classe
@@ -33,22 +31,24 @@ class dataBaseConnexion
      * @param void
      * @return Singleton
      */
-    public static function getInstance(Config $dbConfig)
+    public static function getInstance()
     {
         try {
+            if (is_null(self::$instance)) {
+                $dbConfig = new Config('config/db.ini');
 
-            $dsn ='mysql:host=' . $dbConfig->host .
-                ';dbname=' . $dbConfig->dbname .
-                ';charset=' . $dbConfig->charset;
+                $dsn ='mysql:host=' . $dbConfig->host .
+                    ';dbname=' . $dbConfig->dbname .
+                    ';charset=' . $dbConfig->charset;
 
-            if (is_null(self::$_instance)) {
-                self::$_instance = new PDO($dsn, $dbConfig->login, $dbConfig->pwd);
+                self::$instance = new \PDO($dsn, $dbConfig->login, $dbConfig->pwd);
             }
 
-            return self::$_instance;
+            return self::$instance;
+
         } catch (Exception $e) {
 
-            die('Erreur : ' . $e->getMessage());
+            throw $e;
 
         }
     }
