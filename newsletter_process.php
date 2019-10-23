@@ -3,33 +3,33 @@ require_once 'vendor/autoload.php';
 session_start();
 
 use App\Config;
+use App\dataBaseConnexion;
 use App\Utils;
 
 try {
     $dbConfig = new Config('config/db.ini');
-
-    $dsn = 'mysql:host=' . $dbConfig->host .
-            ';dbname=' . $dbConfig->dbname .
-            ';charset=' . $dbConfig->charset;
-
-    $pdo = new PDO($dsn, $dbConfig->user, $dbConfig->password);
+    
+    $pdo = dataBaseConnexion::getInstance($dbConfig);
+    
 } catch (Exception $ex) {
     // TODO: générer nouvelle notification d'erreur avant de rediriger vers la page d'accueil
+    console.log($ex);
     Utils::redirect('index.php');
 }
 
 if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     // TODO: générer une notification d'erreur sur le format de l'adresse email
+    console.log('Le format de l\'adresse email n`\'est pas correct.');
     Utils::redirect('index.php');
 }
 
-$stmt = $pdo->prepare("INSERT INTO newsletter (email) VALUES (:email)");
+$stmt = $pdo->prepare("INSERT INTO newsletter (email, subscribed) VALUES (:email, :subscribed)");
 
 $res = $stmt->execute([
-    'email' => $_POST['email']
+    'email' => $_POST['email'],
+    'subscribed' => true
 ]);
 
-var_dump($res);
 
 // TODO: générer notification selon réussite ou échec de la requête
 
@@ -49,4 +49,4 @@ var_dump($res);
 // ];
 
 // rediriger vers la page d'accueil
-//Utils::redirect('index.php');
+Utils::redirect('index.php');
