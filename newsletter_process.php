@@ -2,18 +2,17 @@
 require_once 'vendor/autoload.php';
 session_start();
 
+use App\Config;
 use App\Utils;
 
 try {
-    if (!file_exists('config/db.ini') || !($dbConfig = parse_ini_file('config/db.ini'))) {
-        throw new Exception("Une erreur est survenue lors du chargement du fichier de configuration");
-    }
+    $dbConfig = new Config('config/db.ini');
 
-    $dsn = 'mysql:host=' . $dbConfig['host'] .
-            ';dbname=' . $dbConfig['dbname'] .
-            ';charset=' . $dbConfig['charset'];
+    $dsn = 'mysql:host=' . $dbConfig->host .
+            ';dbname=' . $dbConfig->dbname .
+            ';charset=' . $dbConfig->charset;
 
-    $pdo = new PDO($dsn, $dbConfig['user'], $dbConfig['password']);
+    $pdo = new PDO($dsn, $dbConfig->user, $dbConfig->password);
 } catch (Exception $ex) {
     // TODO: générer nouvelle notification d'erreur avant de rediriger vers la page d'accueil
     Utils::redirect('index.php');
